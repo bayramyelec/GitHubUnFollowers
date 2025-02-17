@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		54FF22DB2D6389F2000F9BD0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF22DA2D6389F2000F9BD0 /* SnapKit */; };
+		54FF22DE2D638A0C000F9BD0 /* BYCustomTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF22DD2D638A0C000F9BD0 /* BYCustomTextField */; };
+		54FF22FD2D639005000F9BD0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 54FF22FC2D639005000F9BD0 /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		54FF22A32D63888B000F9BD0 /* GithubUnFollowers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubUnFollowers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54FF22FD2D639005000F9BD0 /* Kingfisher in Frameworks */,
+				54FF22DE2D638A0C000F9BD0 /* BYCustomTextField in Frameworks */,
+				54FF22DB2D6389F2000F9BD0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = GithubUnFollowers;
 			packageProductDependencies = (
+				54FF22DA2D6389F2000F9BD0 /* SnapKit */,
+				54FF22DD2D638A0C000F9BD0 /* BYCustomTextField */,
+				54FF22FC2D639005000F9BD0 /* Kingfisher */,
 			);
 			productName = GithubUnFollowers;
 			productReference = 54FF22A32D63888B000F9BD0 /* GithubUnFollowers.app */;
@@ -107,6 +119,11 @@
 			);
 			mainGroup = 54FF229A2D63888B000F9BD0;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				54FF22D92D6389F2000F9BD0 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				54FF22DC2D638A0C000F9BD0 /* XCRemoteSwiftPackageReference "BYCustomTextField" */,
+				54FF22FB2D639005000F9BD0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 54FF22A42D63888B000F9BD0 /* Products */;
 			projectDirPath = "";
@@ -150,9 +167,10 @@
 				INFOPLIST_FILE = GithubUnFollowers/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -178,9 +196,10 @@
 				INFOPLIST_FILE = GithubUnFollowers/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -335,6 +354,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		54FF22D92D6389F2000F9BD0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		54FF22DC2D638A0C000F9BD0 /* XCRemoteSwiftPackageReference "BYCustomTextField" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bayramyelec/BYCustomTextField";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+		54FF22FB2D639005000F9BD0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		54FF22DA2D6389F2000F9BD0 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 54FF22D92D6389F2000F9BD0 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		54FF22DD2D638A0C000F9BD0 /* BYCustomTextField */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 54FF22DC2D638A0C000F9BD0 /* XCRemoteSwiftPackageReference "BYCustomTextField" */;
+			productName = BYCustomTextField;
+		};
+		54FF22FC2D639005000F9BD0 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 54FF22FB2D639005000F9BD0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 54FF229B2D63888B000F9BD0 /* Project object */;
 }

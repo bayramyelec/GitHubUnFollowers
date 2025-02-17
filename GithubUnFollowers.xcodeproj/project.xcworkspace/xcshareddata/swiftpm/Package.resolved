@@ -1,0 +1,33 @@
+{
+  "originHash" : "d773f41de4332c0f810c9b48048c572eea3624ffd0dae2495e61d3c0ee6cb1ab",
+  "pins" : [
+    {
+      "identity" : "bycustomtextfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bayramyelec/BYCustomTextField",
+      "state" : {
+        "revision" : "8dcae7c2a9c41595cd79c31dba591e90192043d4",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "3db26ab625d194c38e68c1a40e43d1bc12743fe0",
+        "version" : "8.2.0"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit",
+      "state" : {
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
+      }
+    }
+  ],
+  "version" : 3
+}
