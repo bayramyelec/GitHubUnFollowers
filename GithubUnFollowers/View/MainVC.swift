@@ -16,12 +16,9 @@ class MainVC: UIViewController {
     
     var viewModel = MainViewModel()
     
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.backgroundColor = .black
-        tableView.separatorStyle = .none
-        return tableView
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        return collectionView
     }()
     
     private let button: UIButton = {
@@ -54,10 +51,12 @@ class MainVC: UIViewController {
             make.right.equalToSuperview().inset(30)
             make.width.height.equalTo(70)
         }
-        view.addSubview(tableView)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.snp.makeConstraints { make in
+        view.addSubview(collectionView)
+        collectionView.backgroundColor = .black
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.snp.makeConstraints { make in
             make.top.equalTo(textField.snp.bottom).offset(10)
             make.left.right.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
         }
@@ -65,27 +64,31 @@ class MainVC: UIViewController {
     
     @objc func buttonTapped(){
         viewModel.searchUsers(query: textField.text ?? "")
-        tableView.reloadData()
+        collectionView.reloadData()
+        view.endEditing(true)
     }
 }
 
-extension MainVC: UITableViewDelegate, UITableViewDataSource{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         viewModel.users.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MainCollectionViewCell
         let item = viewModel.users[indexPath.row]
-        cell.textLabel?.text = item.login
-        let url = URL(string: item.avatar_url)
-        cell.imageView?.kf.setImage(with: url)
+        cell.configure(item)
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailVC = DetailVC()
         detailVC.viewModel = self.viewModel
+        detailVC.name = viewModel.users[indexPath.row].login
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 250, height: 250)
     }
 }

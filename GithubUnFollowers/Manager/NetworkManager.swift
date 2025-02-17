@@ -14,13 +14,9 @@ class NetworkManager {
     private init() {}
     
     private func fetchData<T: Decodable>(_ endpoint: EndPoint, userName: String , completion: @escaping (Result<T, Error>) -> Void){
-        let task = URLSession.shared.dataTask(with: endpoint.requestURL(user: userName)) { data, response, error in
+        let task = URLSession.shared.dataTask(with: endpoint.requestURL(user: userName)) { data, _, error in
             if let error = error {
                 completion(.failure(error))
-            }
-            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-                completion(.failure(error ?? URLError(.badServerResponse)))
-                return
             }
             guard let data = data else {
                 completion(.failure(error ?? URLError(.badServerResponse)))
@@ -36,13 +32,13 @@ class NetworkManager {
         task.resume()
     }
     
-    func fetchFollowers(username: String, completion: @escaping (Result<[User], Error>) -> Void) {
-        let endPoint = EndPoint.getFollowers
-        fetchData(endPoint, userName: username, completion: completion)
+    func fetchUser(username: String, completion: @escaping (Result<GithubUser, Error>) -> Void) {
+        let endpoint = EndPoint.getUsers
+        fetchData(endpoint, userName: username, completion: completion)
     }
     
-    func fetchUser(username: String, completion: @escaping (Result<GitHubUser, Error>) -> Void) {
-        let endpoint = EndPoint.getUsers
+    func fetchFollowers(username: String, completion: @escaping (Result<[Follower], Error>) -> Void) {
+        let endpoint = EndPoint.getFollowers
         fetchData(endpoint, userName: username, completion: completion)
     }
     

@@ -26,7 +26,7 @@ enum EndPoint {
     case getUsers
     case getFollowers
 }
-
+// https://api.github.com/users/bayramyelec/followers
 extension EndPoint: EndPointProtocol {
     var baseURL: String {
         return "https://api.github.com/"
@@ -34,18 +34,18 @@ extension EndPoint: EndPointProtocol {
     
     var path: String {
         switch self {
-        case .getFollowers:
-            return "users/"
         case .getUsers:
             return "search/users?q="
+        case .getFollowers:
+            return "/followers"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getFollowers:
-            return .get
         case .getUsers:
+            return .get
+        case .getFollowers:
             return .get
         }
     }
@@ -55,7 +55,7 @@ extension EndPoint: EndPointProtocol {
         case .getUsers:
             return "\(baseURL)\(path)\(user)"
         case .getFollowers:
-            return "\(baseURL)\(path)/followers"
+            return "\(baseURL)users/\(user)\(path)"
         }
     }
     
