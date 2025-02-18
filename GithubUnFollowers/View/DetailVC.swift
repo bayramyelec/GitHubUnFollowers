@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,18 +15,20 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(DetailTableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
     }()
     
-    var viewModel = MainViewModel()
-
+    var viewModel = DetailViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         setup()
+        fetchData()
     }
     
-    private func setup(){
+    private func setup() {
         view.addSubview(tableView)
         tableView.backgroundColor = .black
         tableView.delegate = self
@@ -33,22 +36,45 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        viewModel.fetchFollowers(username: name!)
-        tableView.reloadData()
-        print(viewModel.followers.count)
+    }
+    
+    private func setupNavigationBar(){
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    private func fetchData() {
+        guard let username = name, !username.isEmpty else { return }
+        viewModel.filterFollowing(username: username) { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.followers.count
+        return viewModel.filteredFollowing.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let item = viewModel.followers[indexPath.row]
-        cell.textLabel?.text = item.login
-        cell.textLabel?.textColor = .white
-        cell.backgroundColor = .black
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetailTableViewCell
+        let item = viewModel.filteredFollowing[indexPath.row]
+        cell.configure(with: item)
         return cell
     }
-
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+    
 }

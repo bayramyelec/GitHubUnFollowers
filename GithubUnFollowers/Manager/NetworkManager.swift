@@ -42,4 +42,9 @@ class NetworkManager {
         fetchData(endpoint, userName: username, completion: completion)
     }
     
+    func fetchFollowing(username: String, completion: @escaping (Result<[Follower], Error>) -> Void) {
+        let endpoint = EndPoint.getFollowing
+        fetchData(endpoint, userName: username, completion: completion)
+    }
+    
 }

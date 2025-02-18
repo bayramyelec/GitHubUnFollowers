@@ -25,8 +25,11 @@ enum HTTPMethod: String {
 enum EndPoint {
     case getUsers
     case getFollowers
+    case getFollowing
 }
-// https://api.github.com/users/bayramyelec/followers
+
+// https://api.github.com/users/\(username)/followers?page=\(page)&per_page=\(perPage)
+
 extension EndPoint: EndPointProtocol {
     var baseURL: String {
         return "https://api.github.com/"
@@ -37,7 +40,9 @@ extension EndPoint: EndPointProtocol {
         case .getUsers:
             return "search/users?q="
         case .getFollowers:
-            return "/followers"
+            return "/followers?page=1&per_page=100"
+        case .getFollowing:
+            return "/following?page=1&per_page=100"
         }
     }
     
@@ -47,6 +52,8 @@ extension EndPoint: EndPointProtocol {
             return .get
         case .getFollowers:
             return .get
+        case .getFollowing:
+            return .get
         }
     }
     
@@ -55,6 +62,8 @@ extension EndPoint: EndPointProtocol {
         case .getUsers:
             return "\(baseURL)\(path)\(user)"
         case .getFollowers:
+            return "\(baseURL)users/\(user)\(path)"
+        case .getFollowing:
             return "\(baseURL)users/\(user)\(path)"
         }
     }

@@ -59,7 +59,6 @@ struct Item: Codable {
 }
 
 
-// MARK: - WelcomeElement
 struct Follower: Codable {
     let login: String
     let id: Int
@@ -98,6 +97,7 @@ struct Follower: Codable {
 }
 
 enum TypeEnum: String, Codable {
+    case organization = "Organization"
     case user = "User"
 }
 

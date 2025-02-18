@@ -12,59 +12,120 @@ import Kingfisher
 
 class MainVC: UIViewController {
     
-    private var textField = BYTextField(placeholder: "Search", alertMessage: "", validMessage: "", characters: [])
-    
     var viewModel = MainViewModel()
     
+    private var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        return stackView
+    }()
+    
+    private var textField = BYTextField(placeholder: "Search", alertMessage: "", validMessage: "", characters: [])
+    
+    private let activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.style = .large
+        activityIndicator.color = .white
+        return activityIndicator
+    }()
+    
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 1.2, height: 250)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
+
     
     private let button: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Search", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 15
+        button.layer.cornerRadius = 10
         return button
+    }()
+    
+    private let githubImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "github")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         setupUI()
     }
     
     private func setupUI(){
         view.backgroundColor = .black
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalToSuperview().inset(30)
+        view.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.centerX.equalToSuperview()
         }
-        view.addSubview(button)
+        
+        stackView.addArrangedSubview(githubImage)
+        
+        stackView.addArrangedSubview(textField)
+        textField.snp.makeConstraints { make in
+            make.height.equalTo(70)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+        }
+        
+        stackView.addArrangedSubview(button)
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         button.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.left.equalTo(textField.snp.right).offset(10)
-            make.right.equalToSuperview().inset(30)
-            make.width.height.equalTo(70)
+            make.height.equalTo(50)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
         }
-        view.addSubview(collectionView)
+        
+        stackView.addArrangedSubview(collectionView)
         collectionView.backgroundColor = .black
         collectionView.delegate = self
         collectionView.dataSource = self
+        collectionView.isPagingEnabled = true
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(textField.snp.bottom).offset(10)
-            make.left.right.bottom.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.height.equalTo(300)
         }
+        
+        collectionView.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(collectionView)
+        }
+        
+    }
+    
+    private func setupNavigationBar(){
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.largeTitleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        appearance.titleTextAttributes = [
+            .foregroundColor: UIColor.white
+        ]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        navigationItem.title = "Github UnFollowers"
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     @objc func buttonTapped(){
-        viewModel.searchUsers(query: textField.text ?? "")
-        collectionView.reloadData()
+        activityIndicator.startAnimating()
+        viewModel.searchUsers(query: textField.text ?? "") { [weak self] in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+                self?.activityIndicator.stopAnimating()
+            }
+        }
         view.endEditing(true)
     }
 }
@@ -83,12 +144,9 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailVC = DetailVC()
-        detailVC.viewModel = self.viewModel
         detailVC.name = viewModel.users[indexPath.row].login
+        detailVC.navigationItem.title = "\(viewModel.users[indexPath.row].login) (UnFollowers)"
         navigationController?.pushViewController(detailVC, animated: true)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 250, height: 250)
-    }
 }
