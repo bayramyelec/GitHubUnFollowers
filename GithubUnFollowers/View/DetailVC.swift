@@ -77,4 +77,23 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = UserDetailVC()
+        let item1 = viewModel.filteredFollowing[indexPath.row]
+        viewModel.fetchUserDetails(username: item1.login) { result in
+            switch result {
+            case .success(let success):
+                DispatchQueue.main.async {
+                    vc.configure(item: success)
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            case .failure(let failure):
+                DispatchQueue.main.async {
+                    print(failure)
+                }
+            }
+        }
+    }
+    
+    
 }

@@ -28,8 +28,6 @@ enum EndPoint {
     case getFollowing
 }
 
-// https://api.github.com/users/\(username)/followers?page=\(page)&per_page=\(perPage)
-
 extension EndPoint: EndPointProtocol {
     var baseURL: String {
         return "https://api.github.com/"

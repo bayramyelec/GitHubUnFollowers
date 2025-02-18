@@ -40,11 +40,12 @@ class MainVC: UIViewController {
     }()
     
     
-    private let button: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Search", for: .normal)
+    private let searchButton: UIButton = {
+        let button = UIButton(type: .roundedRect)
+        button.setTitle("Search..", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .systemGreen
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         button.layer.cornerRadius = 10
         return button
     }()
@@ -87,7 +88,7 @@ class MainVC: UIViewController {
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.height.equalTo(250)
+            make.height.equalTo(300)
             make.width.equalTo(UIScreen.main.bounds.width / 1.2)
             make.centerX.equalToSuperview()
         }
@@ -104,16 +105,14 @@ class MainVC: UIViewController {
             make.width.equalTo(UIScreen.main.bounds.width / 1.2)
             make.centerX.equalToSuperview()
         }
-        view.addSubview(button)
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        button.snp.makeConstraints { make in
+        view.addSubview(searchButton)
+        searchButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        searchButton.snp.makeConstraints { make in
             make.top.equalTo(textField.snp.bottom)
             make.height.equalTo(50)
             make.width.equalTo(UIScreen.main.bounds.width / 1.2)
             make.centerX.equalToSuperview()
         }
-        
-        
     }
     
     private func setupNavigationBar(){
@@ -132,6 +131,7 @@ class MainVC: UIViewController {
         navigationItem.title = "Github UnFollowers"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
+    
     
     @objc func buttonTapped(){
         collectionView.alpha = 1
@@ -161,8 +161,9 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailVC = DetailVC()
-        detailVC.name = viewModel.users[indexPath.row].login
-        detailVC.navigationItem.title = "\(viewModel.users[indexPath.row].login) (UnFollowers)"
+        let item = viewModel.users[indexPath.row]
+        detailVC.name = item.login
+        detailVC.navigationItem.title = "\(item.login) (UnFollowers)"
         navigationController?.pushViewController(detailVC, animated: true)
     }
     

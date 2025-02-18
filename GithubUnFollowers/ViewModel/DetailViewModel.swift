@@ -48,12 +48,47 @@ class DetailViewModel {
                 self.filteredFollowing = following.filter { item in
                     !followers.contains(where: { $0.login == item.login })
                 }
-                
                 DispatchQueue.main.async {
                     completion()
                 }
             }
         }
     }
+    
+    func fetchUserDetails(username: String, completion: @escaping (Result<UserDetail, Error>) -> Void) {
+        guard let url = URL(string: "https://api.github.com/users/\(username)") else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, _, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(.failure(URLError(.badServerResponse)))
+                }
+                return
+            }
+            
+            do {
+                let decodedData = try JSONDecoder().decode(UserDetail.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(decodedData))
+                }
+            } catch let decodingError {
+                DispatchQueue.main.async {
+                    print("Decoding error: \(decodingError.localizedDescription)")
+                    completion(.failure(decodingError))
+                }
+            }
+        }.resume()
+    }
+    
     
 }
