@@ -35,9 +35,10 @@ class MainVC: UIViewController {
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 1.2, height: 250)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.alpha = 0
         return collectionView
     }()
-
+    
     
     private let button: UIButton = {
         let button = UIButton(type: .system)
@@ -52,6 +53,7 @@ class MainVC: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "github")
         imageView.contentMode = .scaleAspectFit
+        imageView.alpha = 1
         return imageView
     }()
     
@@ -61,43 +63,56 @@ class MainVC: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
     private func setupUI(){
         view.backgroundColor = .black
-        view.addSubview(stackView)
-        stackView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+        
+        view.addSubview(githubImage)
+        githubImage.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.height.equalTo(250)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
             make.centerX.equalToSuperview()
         }
         
-        stackView.addArrangedSubview(githubImage)
-        
-        stackView.addArrangedSubview(textField)
-        textField.snp.makeConstraints { make in
-            make.height.equalTo(70)
-            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
-        }
-        
-        stackView.addArrangedSubview(button)
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        button.snp.makeConstraints { make in
-            make.height.equalTo(50)
-            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
-        }
-        
-        stackView.addArrangedSubview(collectionView)
+        view.addSubview(collectionView)
         collectionView.backgroundColor = .black
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.snp.makeConstraints { make in
-            make.height.equalTo(300)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.height.equalTo(250)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+            make.centerX.equalToSuperview()
         }
         
         collectionView.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints { make in
             make.center.equalTo(collectionView)
         }
+        
+        view.addSubview(textField)
+        textField.snp.makeConstraints { make in
+            make.top.equalTo(collectionView.snp.bottom).offset(10)
+            make.height.equalTo(70)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+            make.centerX.equalToSuperview()
+        }
+        view.addSubview(button)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.snp.makeConstraints { make in
+            make.top.equalTo(textField.snp.bottom)
+            make.height.equalTo(50)
+            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+            make.centerX.equalToSuperview()
+        }
+        
         
     }
     
@@ -119,6 +134,8 @@ class MainVC: UIViewController {
     }
     
     @objc func buttonTapped(){
+        collectionView.alpha = 1
+        githubImage.alpha = 0
         activityIndicator.startAnimating()
         viewModel.searchUsers(query: textField.text ?? "") { [weak self] in
             DispatchQueue.main.async {

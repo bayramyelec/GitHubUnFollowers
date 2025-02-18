@@ -37,7 +37,7 @@ class DetailTableViewCell: UITableViewCell {
         imageView.tintColor = .white
         return imageView
     }()
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -51,16 +51,16 @@ class DetailTableViewCell: UITableViewCell {
         contentView.backgroundColor = .black
         contentView.addSubview(avatarImageView)
         contentView.addSubview(activityIndicator)
-
+        
         avatarImageView.snp.makeConstraints { make in
             make.top.left.bottom.equalToSuperview().inset(10)
             make.width.equalTo(50)
         }
-
+        
         activityIndicator.snp.makeConstraints { make in
             make.center.equalTo(avatarImageView)
         }
-
+        
         contentView.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { make in
             make.top.bottom.equalToSuperview().inset(10)
@@ -78,12 +78,12 @@ class DetailTableViewCell: UITableViewCell {
     func configure(with model: Follower) {
         let url = URL(string: model.avatarURL)
         activityIndicator.startAnimating()
+        nameLabel.text = model.login
         avatarImageView.kf.setImage(
             with: url,
             options: [.forceRefresh],
             completionHandler: { _ in
                 DispatchQueue.main.async {
-                    self.nameLabel.text = model.login
                     self.activityIndicator.stopAnimating()
                 }
             }
