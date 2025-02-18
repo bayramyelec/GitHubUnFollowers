@@ -26,6 +26,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         setupNavigationBar()
         setup()
         fetchData()
+        
     }
     
     private func setup() {
@@ -70,6 +71,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetailTableViewCell
         let item = viewModel.filteredFollowing[indexPath.row]
         cell.configure(with: item)
+        print(viewModel.filteredFollowing.count)
         return cell
     }
     
@@ -85,8 +87,8 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             case .success(let success):
                 DispatchQueue.main.async {
                     vc.configure(item: success)
-                    self.navigationController?.pushViewController(vc, animated: true)
                 }
+                self.navigationController?.pushViewController(vc, animated: true)
             case .failure(let failure):
                 DispatchQueue.main.async {
                     print(failure)

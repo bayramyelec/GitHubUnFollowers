@@ -118,8 +118,8 @@ struct UserDetail: Codable {
     let receivedEventsURL: String
     let type, userViewType: String
     let siteAdmin: Bool
-    let name: String
-    let blog, location: String
+    let name: String?
+    let blog, location: String?
     let bio, twitterUsername: String?
     let publicRepos, publicGists, followers, following: Int
     let createdAt, updatedAt: String

@@ -13,7 +13,8 @@ class UserDetailVC: UIViewController {
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(systemName: "person.circle")
+        imageView.layer.cornerRadius = 50
+        imageView.layer.masksToBounds = true
         return imageView
     }()
     
@@ -83,10 +84,12 @@ class UserDetailVC: UIViewController {
     }
     
     private func setup(){
+        view.backgroundColor = .black
         view.addSubview(avatarImageView)
         avatarImageView.snp.makeConstraints { make in
             make.top.left.equalTo(view.safeAreaLayoutGuide)
-            make.width.height.equalTo(200)
+            make.height.equalTo(100)
+            make.width.equalTo(100)
         }
         view.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { make in
@@ -100,9 +103,9 @@ class UserDetailVC: UIViewController {
         }
         view.addSubview(descLabel)
         descLabel.snp.makeConstraints { make in
-            make.top.equalTo(avatarImageView.snp.bottom).offset(30)
+            make.top.equalTo(avatarImageView.snp.bottom).offset(50)
             make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.height.equalTo(20)
+            make.height.equalTo(50)
         }
         view.addSubview(locationLabel)
         locationLabel.snp.makeConstraints { make in
@@ -123,6 +126,7 @@ class UserDetailVC: UIViewController {
             make.height.equalTo(20)
         }
         view.addSubview(goButton)
+        goButton.addTarget(self, action: #selector(goButtonTapped), for: .touchUpInside)
         goButton.snp.makeConstraints { make in
             make.top.equalTo(followersCountLabel.snp.bottom).offset(50)
             make.left.right.equalTo(view.safeAreaLayoutGuide).inset(20)
@@ -140,14 +144,28 @@ class UserDetailVC: UIViewController {
         avatarImageView.kf.indicatorType = .activity
         avatarImageView.kf.setImage(with: url)
         
-        nameLabel.text = item.name
+        nameLabel.text = "\(item.name ?? "No Name")"
         usernameLabel.text = item.login
-        descLabel.text = item.bio
-        locationLabel.text = "📍 \(item.location)"
+        descLabel.text = "\(item.bio ?? "No Description")"
+        locationLabel.text = "📍 \(item.location ?? "No Location")"
         followersCountLabel.text = "👤 \(item.followers) followers"
         followingCountLabel.text = "● \(item.following) following"
         
-        createdDateLabel.text = "Created at \(item.createdAt)"
-        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        if let date = formatter.date(from: item.createdAt) {
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            let formattedDate = formatter.string(from: date)
+            createdDateLabel.text = "Created at \(formattedDate)"
+        }
+    }
+    
+    @objc func goButtonTapped() {
+        if let webURL = URL(string: "https://github.com/\(usernameLabel.text ?? "")") {
+            if UIApplication.shared.canOpenURL(webURL) {
+                UIApplication.shared.open(webURL)
+            }
+        }
     }
 }

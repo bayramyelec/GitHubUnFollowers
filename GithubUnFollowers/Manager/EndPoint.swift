@@ -38,9 +38,9 @@ extension EndPoint: EndPointProtocol {
         case .getUsers:
             return "search/users?q="
         case .getFollowers:
-            return "/followers?page=1&per_page=100"
+            return "/followers?page=1&per_page=200"
         case .getFollowing:
-            return "/following?page=1&per_page=100"
+            return "/following?page=1&per_page=200"
         }
     }
     
