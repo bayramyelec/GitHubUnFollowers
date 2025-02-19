@@ -13,6 +13,7 @@ import Kingfisher
 class MainVC: UIViewController {
     
     var viewModel = MainViewModel()
+    var detailViewModel = DetailViewModel()
     
     private var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -21,7 +22,7 @@ class MainVC: UIViewController {
         return stackView
     }()
     
-    private var textField = BYTextField(placeholder: "Search", alertMessage: "", validMessage: "", characters: [])
+    private var textField = BYTextField(placeholder: "Search..", alertMessage: "", validMessage: "", characters: [])
     
     private let activityIndicator: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .large)
@@ -42,11 +43,7 @@ class MainVC: UIViewController {
     
     private let searchButton: UIButton = {
         let button = UIButton(type: .roundedRect)
-        button.setTitle("Search..", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemGreen
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        button.layer.cornerRadius = 10
+        button.customButton(imageName: "", title: "Search", foregroundColor: .white, backgroundColor: .systemBlue)
         return button
     }()
     
@@ -60,18 +57,16 @@ class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
         setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
+        setupNavigationBar()
     }
     
     private func setupUI(){
         view.backgroundColor = .black
-        
         view.addSubview(githubImage)
         githubImage.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
@@ -130,6 +125,7 @@ class MainVC: UIViewController {
         
         navigationItem.title = "Github UnFollowers"
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     
@@ -160,11 +156,23 @@ extension MainVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let detailVC = DetailVC()
-        let item = viewModel.users[indexPath.row]
-        detailVC.name = item.login
-        detailVC.navigationItem.title = "\(item.login) (UnFollowers)"
-        navigationController?.pushViewController(detailVC, animated: true)
+        let vc = MainUserVC()
+        let item1 = viewModel.users[indexPath.row]
+        vc.userDetail = item1
+        detailViewModel.fetchUserDetails(username: item1.login) { result in
+            switch result {
+            case .success(let success):
+                DispatchQueue.main.async {
+                    vc.configure(item: success)
+                }
+                self.navigationController?.pushViewController(vc, animated: true)
+            case .failure(let failure):
+                DispatchQueue.main.async {
+                    print(failure)
+                }
+            }
+        }
     }
     
 }
+

@@ -1,14 +1,14 @@
 //
-//  UserDetailVC.swift
+//  UserVC.swift
 //  GithubUnFollowers
 //
-//  Created by Bayram Yeleç on 18.02.2025.
+//  Created by Bayram Yeleç on 19.02.2025.
 //
 
 import UIKit
 import Kingfisher
 
-class UserDetailVC: UIViewController {
+class UserVC: UIViewController {
     
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -69,14 +69,19 @@ class UserDetailVC: UIViewController {
     }()
     
     private var goButton: UIButton = {
-        let button = UIButton(type: .roundedRect)
-        button.setTitle("Github Profile", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .bold)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
+        let button = UIButton()
+        button.customButton(imageName: "person.fill", title: "Github Profile", foregroundColor: .white, backgroundColor: .systemBlue)
         return button
     }()
+    
+    private var backButton: UIButton = {
+        let backButton = UIButton(type: .roundedRect)
+        backButton.setTitle("Geri", for: .normal)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        return backButton
+    }()
+    
+    var userDetail: Item?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,45 +89,56 @@ class UserDetailVC: UIViewController {
     }
     
     private func setup(){
+        navigationController?.setNavigationBarHidden(true, animated: false)
         view.backgroundColor = .black
+        
+        view.addSubview(backButton)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.height.equalTo(30)
+        }
+        
         view.addSubview(avatarImageView)
         avatarImageView.snp.makeConstraints { make in
-            make.top.left.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(backButton.snp.bottom).offset(10)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(100)
             make.width.equalTo(100)
         }
         view.addSubview(nameLabel)
         nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(50)
-            make.left.equalTo(avatarImageView.snp.right).offset(10)
+            make.top.equalTo(backButton.snp.bottom).offset(30)
+            make.left.equalTo(avatarImageView.snp.right).offset(20)
         }
         view.addSubview(usernameLabel)
         usernameLabel.snp.makeConstraints { make in
             make.top.equalTo(nameLabel.snp.bottom).offset(5)
-            make.left.equalTo(avatarImageView.snp.right).offset(10)
+            make.left.equalTo(avatarImageView.snp.right).offset(20)
         }
         view.addSubview(descLabel)
         descLabel.snp.makeConstraints { make in
-            make.top.equalTo(avatarImageView.snp.bottom).offset(50)
-            make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.top.equalTo(avatarImageView.snp.bottom).offset(30)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(50)
         }
         view.addSubview(locationLabel)
         locationLabel.snp.makeConstraints { make in
-            make.top.equalTo(descLabel.snp.bottom).offset(20)
-            make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.top.equalTo(descLabel.snp.bottom).offset(10)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(20)
         }
         view.addSubview(followersCountLabel)
         followersCountLabel.snp.makeConstraints { make in
             make.top.equalTo(locationLabel.snp.bottom).offset(30)
-            make.left.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.height.equalTo(20)
         }
         view.addSubview(followingCountLabel)
         followingCountLabel.snp.makeConstraints { make in
             make.top.equalTo(locationLabel.snp.bottom).offset(30)
-            make.left.equalTo(followersCountLabel.snp.right).offset(10)
+            make.left.equalTo(followersCountLabel.snp.right).offset(20)
             make.height.equalTo(20)
         }
         view.addSubview(goButton)
@@ -161,6 +177,10 @@ class UserDetailVC: UIViewController {
         }
     }
     
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     @objc func goButtonTapped() {
         if let webURL = URL(string: "https://github.com/\(usernameLabel.text ?? "")") {
             if UIApplication.shared.canOpenURL(webURL) {
@@ -168,4 +188,5 @@ class UserDetailVC: UIViewController {
             }
         }
     }
+    
 }

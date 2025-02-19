@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class UnfollowersVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var name: String?
     
@@ -19,23 +19,41 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         return tableView
     }()
     
+    private var backButton: UIButton = {
+        let backButton = UIButton(type: .roundedRect)
+        backButton.setTitle("Geri", for: .normal)
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        return backButton
+    }()
+    
     var viewModel = DetailViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavigationBar()
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchData()
-        
     }
     
     private func setup() {
+        view.addSubview(backButton)
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        backButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
+        }
+        
         view.addSubview(tableView)
         tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(backButton.snp.bottom)
+            make.left.right.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -63,6 +81,10 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    @objc private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.filteredFollowing.count
     }
@@ -71,7 +93,6 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetailTableViewCell
         let item = viewModel.filteredFollowing[indexPath.row]
         cell.configure(with: item)
-        print(viewModel.filteredFollowing.count)
         return cell
     }
     
@@ -80,7 +101,7 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = UserDetailVC()
+        let vc = UserVC()
         let item1 = viewModel.filteredFollowing[indexPath.row]
         viewModel.fetchUserDetails(username: item1.login) { result in
             switch result {
@@ -96,6 +117,5 @@ class DetailVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-    
     
 }
