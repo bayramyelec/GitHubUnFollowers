@@ -38,7 +38,6 @@ class MainCollectionViewCell: UICollectionViewCell {
     }
     
     private func setup(){
-        contentView.backgroundColor = .black
         contentView.addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(10)

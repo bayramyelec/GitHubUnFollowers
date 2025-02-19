@@ -13,8 +13,7 @@ class UnfollowersVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
     var name: String?
     
     private var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .grouped)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        let tableView = UITableView(frame: .zero)
         tableView.register(UnFollwersTableViewCell.self, forCellReuseIdentifier: "cell")
         return tableView
     }()
@@ -43,7 +42,7 @@ class UnfollowersVC: UIViewController, UITableViewDelegate, UITableViewDataSourc
         view.addSubview(backButton)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         backButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide).inset(20)
             make.left.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
         

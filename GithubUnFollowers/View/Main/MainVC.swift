@@ -34,7 +34,9 @@ class MainVC: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 1.2, height: 250)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        layout.itemSize = CGSize(width: 250, height: 250)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.alpha = 0
         return collectionView
@@ -71,7 +73,7 @@ class MainVC: UIViewController {
         githubImage.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
             make.height.equalTo(250)
-            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+            make.width.equalTo(250)
             make.centerX.equalToSuperview()
         }
         
@@ -83,8 +85,8 @@ class MainVC: UIViewController {
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).inset(10)
-            make.height.equalTo(300)
-            make.width.equalTo(UIScreen.main.bounds.width / 1.2)
+            make.height.equalTo(250)
+            make.width.equalTo(250)
             make.centerX.equalToSuperview()
         }
         
